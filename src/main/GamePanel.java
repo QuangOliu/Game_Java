@@ -1,84 +1,57 @@
 package main;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import entities.Player;
 import inputs.KeyboardInputs;
 import inputs.MounseInputs;
 
+import utilz.Constaints.PlayerConstaint;
+import utilz.Constaints.Directions;
+
 public class GamePanel extends JPanel {
 	private MounseInputs mouseInputs;
-	private int frame = 0;
-	private float xDetal = 100;
-	private float yDetal = 100;
-	private float xDir = 0.8f, yDir = 0.9f;
-	private long lastCheck = 0;
-	private Color color = new Color(123, 23 , 20);
 
-	private int width = 50;
-	private int height = 50;
-	
-	
- 	public GamePanel() {
+	private Player player;
+	private Game game;
+
+	public GamePanel(Game game) {
+
 		mouseInputs = new MounseInputs(this);
-
+		this.game = game;
 		addKeyListener(new KeyboardInputs(this));
 		addMouseListener(mouseInputs);
+		setWindowSize();
 		addMouseMotionListener(mouseInputs);
 	}
 
-	public void changeX(int value) {
-		// TODO Auto-generated method stub
-		xDetal += value;
+	private void setWindowSize() {
+		Dimension size = new Dimension(1280, 800);
+		setMinimumSize(getMinimumSize());
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 
-	public void changeY(int value) {
-		// TODO Auto-generated method stub
-		yDetal += value;
+	public void updateGame() {
+		player.update();
 	}
 
-	public void setPosition(int x, int y) {
-		this.xDetal = x;
-		this.yDetal = y;
-	}
-	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		updateRectangle();
+		game.render(g);
 
-		g.setColor(color);
-		g.fillRect((int) xDetal, (int) yDetal, width, height);
 	}
 
-	private void updateRectangle() {
-		// TODO Auto-generated method stub
-		xDetal+=xDir;
-		yDetal+=yDir;
-		if((xDetal + width )> 400 || xDetal < 0) {
-			xDir*=-1;
-			color = getRnndColor();
-		}
-		if((yDetal + height)> 400|| yDetal < 0) {
-			yDir*=-1;
-			color = getRnndColor();
-		}
+	public Game getGame() {
+		return game;
 	}
 
-	private Color getRnndColor() {
-		Random generator = new Random();
-		// TODO Auto-generated method stub
-		int r = generator.nextInt(255);
-		int g = generator.nextInt(255);;
-		int b = generator.nextInt(255);;
-		
-		return new Color(r,g,b);
-	}
 }
