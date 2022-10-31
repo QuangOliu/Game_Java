@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import utilz.Constaints.Directions;
 import utilz.Constaints.PlayerConstaint;
+import utilz.LoadSave;
 
 public class Player extends Entity {
 
@@ -21,7 +22,7 @@ public class Player extends Entity {
 
 	public Player(float x, float y) {
 		super(x, y);
-		loodAnimation();
+		loadAnimation();
 	}
 
 	public void update() {
@@ -93,29 +94,14 @@ public class Player extends Entity {
 		aniIndex = 0;
 	}
 
-	private void loodAnimation() {
-
-		InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-		try {
-			BufferedImage img = ImageIO.read(is);
+	private void loadAnimation() {
+			BufferedImage img = LoadSave.GetSpriteAtLas(LoadSave.PLAYER_ATLAS);
+			
 			animation = new BufferedImage[9][6];
-			for (int j = 0; j < animation.length; j++) {
-				for (int i = 0; i < animation[j].length; i++) {
+			for (int j = 0; j < animation.length; j++) 
+				for (int i = 0; i < animation[j].length; i++) 
 					animation[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-		}
-
+			
 	}
 
 	public void resetDirBooleans() {

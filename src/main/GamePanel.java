@@ -16,6 +16,8 @@ import inputs.MounseInputs;
 import utilz.Constaints.PlayerConstaint;
 import utilz.Constaints.Directions;
 
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
 public class GamePanel extends JPanel {
 	private MounseInputs mouseInputs;
 
@@ -28,15 +30,15 @@ public class GamePanel extends JPanel {
 		this.game = game;
 		addKeyListener(new KeyboardInputs(this));
 		addMouseListener(mouseInputs);
-		setWindowSize();
+		setPanelSize();
 		addMouseMotionListener(mouseInputs);
 	}
 
-	private void setWindowSize() {
-		Dimension size = new Dimension(1280, 800);
-		setMinimumSize(getMinimumSize());
+	private void setPanelSize() {
+		Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
 		setPreferredSize(size);
-		setMaximumSize(size);
+
+		System.out.println("size :" + GAME_WIDTH +" : " + GAME_HEIGHT);
 	}
 
 	public void updateGame() {
