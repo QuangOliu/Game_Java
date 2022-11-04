@@ -6,24 +6,30 @@ import java.awt.event.MouseMotionListener;
 
 import main.GamePanel;
 
-public class MounseInputs implements MouseMotionListener, MouseListener {
+public class MouseInputs implements MouseListener, MouseMotionListener {
 
 	private GamePanel gamePanel;
 
-	public MounseInputs(GamePanel gamePanel) {
+	public MouseInputs(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
-//		gamePanel.setPosition(e.getX(), e.getY());
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1)
 			gamePanel.getGame().getPlayer().setAttacking(true);
+
 	}
 
 	@Override
@@ -46,13 +52,6 @@ public class MounseInputs implements MouseMotionListener, MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
