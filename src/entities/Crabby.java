@@ -1,12 +1,15 @@
 package entities;
 
-import static utilz.Constants.EnemyConstants.*;
+import static utilz.Constants.Directions.RIGHT;
+import static utilz.Constants.EnemyConstants.ATTACK;
+import static utilz.Constants.EnemyConstants.CRABBY;
+import static utilz.Constants.EnemyConstants.CRABBY_HEIGHT;
+import static utilz.Constants.EnemyConstants.CRABBY_WIDTH;
+import static utilz.Constants.EnemyConstants.HIT;
+import static utilz.Constants.EnemyConstants.IDLE;
+import static utilz.Constants.EnemyConstants.RUNNING;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
-
-import static utilz.Constants.Directions.*;
 
 import main.Game;
 

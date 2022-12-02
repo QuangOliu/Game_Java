@@ -20,6 +20,9 @@ import utilz.LoadSave;
 import static utilz.Constants.Environment.*;
 
 public class Playing extends State implements Statemethods {
+
+	public int DIEM = 0;
+
 	private Player player;
 	private LevelManager levelManager;
 	private EnemyManager enemyManager;
@@ -30,8 +33,8 @@ public class Playing extends State implements Statemethods {
 	private boolean paused = false;
 
 	private int xLvlOffset;
-	private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
-	private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
+	private int leftBorder = (int) (0.5 * Game.GAME_WIDTH);
+	private int rightBorder = (int) (0.5 * Game.GAME_WIDTH);
 	private int maxLvlOffsetX;
 
 	private BufferedImage backgroundImg, bigCloud, smallCloud;
@@ -40,7 +43,6 @@ public class Playing extends State implements Statemethods {
 
 	private boolean gameOver;
 	private boolean lvlCompleted;
-	private boolean playerDying;
 
 	public Playing(Game game) {
 		super(game);
@@ -92,13 +94,9 @@ public class Playing extends State implements Statemethods {
 			pauseOverlay.update();
 		} else if (lvlCompleted) {
 			levelCompletedOverlay.update();
-		} else if (gameOver) {
-			gameOverOverlay.update();
-		} else if (playerDying) {
-			player.update();
-		} else {
+		} else if (!gameOver) {
 			levelManager.update();
-			objectManager.update(levelManager.getCurrentLevel().getLevelData(), player);
+			objectManager.update();
 			player.update();
 			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
 			checkCloseToBorder();
@@ -131,6 +129,9 @@ public class Playing extends State implements Statemethods {
 		enemyManager.draw(g, xLvlOffset);
 		objectManager.draw(g, xLvlOffset);
 
+		g.setColor(Color.white);
+		// g.drawString("" + DIEM, 100, 100);
+
 		if (paused) {
 			g.setColor(new Color(0, 0, 0, 150));
 			g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
@@ -141,19 +142,24 @@ public class Playing extends State implements Statemethods {
 			levelCompletedOverlay.draw(g);
 	}
 
+	public void changeDiem(int Point) {
+		DIEM += Point;
+	}
+
 	private void drawClouds(Graphics g) {
 		for (int i = 0; i < 3; i++)
-			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH,
+					BIG_CLOUD_HEIGHT, null);
 
 		for (int i = 0; i < smallCloudsPos.length; i++)
-			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
+			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i],
+					SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
 	}
 
 	public void resetAll() {
 		gameOver = false;
 		paused = false;
 		lvlCompleted = false;
-		playerDying = false;
 		player.resetAll();
 		enemyManager.resetAllEnemies();
 		objectManager.resetAllObjects();
@@ -184,6 +190,8 @@ public class Playing extends State implements Statemethods {
 		if (!gameOver)
 			if (e.getButton() == MouseEvent.BUTTON1)
 				player.setAttacking(true);
+			else if (e.getButton() == MouseEvent.BUTTON3)
+				player.powerAttack();
 	}
 
 	@Override
@@ -192,18 +200,18 @@ public class Playing extends State implements Statemethods {
 			gameOverOverlay.keyPressed(e);
 		else
 			switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-				player.setLeft(true);
-				break;
-			case KeyEvent.VK_D:
-				player.setRight(true);
-				break;
-			case KeyEvent.VK_SPACE:
-				player.setJump(true);
-				break;
-			case KeyEvent.VK_ESCAPE:
-				paused = !paused;
-				break;
+				case KeyEvent.VK_A:
+					player.setLeft(true);
+					break;
+				case KeyEvent.VK_D:
+					player.setRight(true);
+					break;
+				case KeyEvent.VK_SPACE:
+					player.setJump(true);
+					break;
+				case KeyEvent.VK_ESCAPE:
+					paused = !paused;
+					break;
 			}
 	}
 
@@ -211,15 +219,15 @@ public class Playing extends State implements Statemethods {
 	public void keyReleased(KeyEvent e) {
 		if (!gameOver)
 			switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-				player.setLeft(false);
-				break;
-			case KeyEvent.VK_D:
-				player.setRight(false);
-				break;
-			case KeyEvent.VK_SPACE:
-				player.setJump(false);
-				break;
+				case KeyEvent.VK_A:
+					player.setLeft(false);
+					break;
+				case KeyEvent.VK_D:
+					player.setRight(false);
+					break;
+				case KeyEvent.VK_SPACE:
+					player.setJump(false);
+					break;
 			}
 
 	}
@@ -237,9 +245,7 @@ public class Playing extends State implements Statemethods {
 				pauseOverlay.mousePressed(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mousePressed(e);
-		} else
-			gameOverOverlay.mousePressed(e);
-
+		}
 	}
 
 	@Override
@@ -249,8 +255,7 @@ public class Playing extends State implements Statemethods {
 				pauseOverlay.mouseReleased(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mouseReleased(e);
-		} else
-			gameOverOverlay.mouseReleased(e);
+		}
 	}
 
 	@Override
@@ -260,14 +265,11 @@ public class Playing extends State implements Statemethods {
 				pauseOverlay.mouseMoved(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mouseMoved(e);
-		} else
-			gameOverOverlay.mouseMoved(e);
+		}
 	}
 
 	public void setLevelCompleted(boolean levelCompleted) {
 		this.lvlCompleted = levelCompleted;
-		if(levelCompleted)
-			game.getAudioPlayer().lvlCompleted();
 	}
 
 	public void setMaxLvlOffset(int lvlOffset) {
@@ -296,11 +298,6 @@ public class Playing extends State implements Statemethods {
 
 	public LevelManager getLevelManager() {
 		return levelManager;
-	}
-
-	public void setPlayerDying(boolean playerDying) {
-		this.playerDying = playerDying;
-
 	}
 
 }
