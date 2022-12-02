@@ -8,6 +8,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import javax.lang.model.util.ElementScanner14;
+
 import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
@@ -138,10 +140,12 @@ public class Playing extends State implements Statemethods {
 
 	private void drawClouds(Graphics g) {
 		for (int i = 0; i < 3; i++)
-			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+			g.drawImage(bigCloud, i * BIG_CLOUD_WIDTH - (int) (xLvlOffset * 0.3), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH,
+					BIG_CLOUD_HEIGHT, null);
 
 		for (int i = 0; i < smallCloudsPos.length; i++)
-			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
+			g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i - (int) (xLvlOffset * 0.7), smallCloudsPos[i],
+					SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
 	}
 
 	public void resetAll() {
@@ -178,6 +182,8 @@ public class Playing extends State implements Statemethods {
 		if (!gameOver)
 			if (e.getButton() == MouseEvent.BUTTON1)
 				player.setAttacking(true);
+			else if (e.getButton() == MouseEvent.BUTTON3)
+				player.powerAttack();
 	}
 
 	@Override
@@ -186,21 +192,25 @@ public class Playing extends State implements Statemethods {
 			gameOverOverlay.keyPressed(e);
 		else
 			switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-				player.setLeft(true);
-				break;
-			case KeyEvent.VK_D:
-				player.setRight(true);
-				break;
-			case KeyEvent.VK_SPACE:
-				player.setJump(true);
-				break;
-			case KeyEvent.VK_ESCAPE:
-				paused = !paused;
-				break;
-			case KeyEvent.VK_B:
-				player.setWalkSpeed(Game.SCALE * 2.0f); 
-				break;
+				case KeyEvent.VK_A:
+					player.setLeft(true);
+					player.moving = true;
+					break;
+				case KeyEvent.VK_D:
+					player.setRight(true);
+					player.moving = true;
+					break;
+				case KeyEvent.VK_W: {
+				}
+				case KeyEvent.VK_SPACE:
+					player.setJump(true);
+					break;
+				case KeyEvent.VK_ESCAPE:
+					paused = !paused;
+					break;
+				case KeyEvent.VK_E:
+					player.speedHight();
+					break;
 			}
 	}
 
@@ -208,20 +218,24 @@ public class Playing extends State implements Statemethods {
 	public void keyReleased(KeyEvent e) {
 		if (!gameOver)
 			switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-				player.setLeft(false);
-				break;
-			case KeyEvent.VK_D:
-				player.setRight(false);
-				break;
-			case KeyEvent.VK_SPACE:
-				player.setJump(false);
-				break;
-			case KeyEvent.VK_B:
-				player.setWalkSpeed(Game.SCALE * 1.2f); 
-				break;
+				case KeyEvent.VK_A:
+					player.setLeft(false);
+					player.moving = false;
+					break;
+				case KeyEvent.VK_D:
+					player.setRight(false);
+					player.moving = false;
+					break;
+				case KeyEvent.VK_W: {
+				}
+				case KeyEvent.VK_SPACE: {
+					player.setJump(false);
+					break;
+				}
+				case KeyEvent.VK_E:
+					player.setHightSpeed(false);
+					break;
 			}
-
 	}
 
 	public void mouseDragged(MouseEvent e) {
