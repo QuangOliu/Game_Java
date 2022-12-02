@@ -28,7 +28,6 @@ public class ObjectManager {
 	public void checkSpikesTouched(Player p) {
 		for (Spike s : spikes)
 			if (s.getHitbox().intersects(p.getHitbox()))
-				// System.out.println("touch");
 				p.kill();
 	}
 
@@ -57,8 +56,7 @@ public class ObjectManager {
 					int type = 0;
 					if (gc.getObjType() == BARREL)
 						type = 1;
-					potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2),
-							(int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
+					potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2), (int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
 					return;
 				}
 			}
@@ -106,8 +104,7 @@ public class ObjectManager {
 
 	private void drawTraps(Graphics g, int xLvlOffset) {
 		for (Spike s : spikes)
-			g.drawImage(spikeImg, (int) (s.getHitbox().x - xLvlOffset), (int) (s.getHitbox().y - s.getyDrawOffset()),
-					SPIKE_WIDTH, SPIKE_HEIGHT, null);
+			g.drawImage(spikeImg, (int) (s.getHitbox().x - xLvlOffset), (int) (s.getHitbox().y - s.getyDrawOffset()), SPIKE_WIDTH, SPIKE_HEIGHT, null);
 
 	}
 
@@ -117,8 +114,7 @@ public class ObjectManager {
 				int type = 0;
 				if (gc.getObjType() == BARREL)
 					type = 1;
-				g.drawImage(containerImgs[type][gc.getAniIndex()], (int) (gc.getHitbox().x - gc.getxDrawOffset() - xLvlOffset),
-						(int) (gc.getHitbox().y - gc.getyDrawOffset()), CONTAINER_WIDTH,
+				g.drawImage(containerImgs[type][gc.getAniIndex()], (int) (gc.getHitbox().x - gc.getxDrawOffset() - xLvlOffset), (int) (gc.getHitbox().y - gc.getyDrawOffset()), CONTAINER_WIDTH,
 						CONTAINER_HEIGHT, null);
 			}
 	}
@@ -129,8 +125,7 @@ public class ObjectManager {
 				int type = 0;
 				if (p.getObjType() == RED_POTION)
 					type = 1;
-				g.drawImage(potionImgs[type][p.getAniIndex()], (int) (p.getHitbox().x - p.getxDrawOffset() - xLvlOffset),
-						(int) (p.getHitbox().y - p.getyDrawOffset()), POTION_WIDTH, POTION_HEIGHT,
+				g.drawImage(potionImgs[type][p.getAniIndex()], (int) (p.getHitbox().x - p.getxDrawOffset() - xLvlOffset), (int) (p.getHitbox().y - p.getyDrawOffset()), POTION_WIDTH, POTION_HEIGHT,
 						null);
 			}
 	}

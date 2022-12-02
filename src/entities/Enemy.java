@@ -25,7 +25,7 @@ public abstract class Enemy extends Entity {
 
 		maxHealth = GetMaxHealth(enemyType);
 		currentHealth = maxHealth;
-		walkSpeed = Game.SCALE * 0.2f;
+		walkSpeed = Game.SCALE * 0.35f;
 	}
 
 	protected void firstUpdateCheck(int[][] lvlData) {
@@ -110,7 +110,7 @@ public abstract class Enemy extends Entity {
 		attackChecked = true;
 
 	}
-
+	// 
 	protected void updateAnimationTick() {
 		aniTick++;
 		if (aniTick >= ANI_SPEED) {

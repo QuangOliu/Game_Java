@@ -4,7 +4,6 @@ import main.Game;
 
 public class Constants {
 
-
 	public static final float GRAVITY = 0.04f * Game.SCALE;
 	public static final int ANI_SPEED = 25;
 
@@ -89,7 +88,7 @@ public class Constants {
 		public static int GetMaxHealth(int enemy_type) {
 			switch (enemy_type) {
 			case CRABBY:
-				return 100;
+				return 10;
 			default:
 				return 1;
 			}
